@@ -1,0 +1,35 @@
+id: 26556
+name: airdock
+environments:
+    production:
+        memory: 1024
+        cli-memory: 512
+        runtime: 'php-8.0:al2'
+        database: airdock
+        queues: false
+        mail: false
+        scheduler: false
+        octane: true
+        gateway-version: 2
+        octane-database-session-persist: true
+        octane-database-session-ttl: 10
+        build:
+            - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev'
+            - 'php artisan event:cache'
+            - 'npm ci && npm run prod && rm -rf node_modules'
+        deploy:
+            - 'php artisan migrate --force'
+    staging:
+        memory: 1024
+        cli-memory: 512
+        runtime: 'php-8.0:al2'
+        database: airdock
+        queues: false
+        mail: false
+        scheduler: false
+        build:
+            - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install'
+            - 'php artisan event:cache'
+            - 'npm ci && npm run dev && rm -rf node_modules'
+        deploy:
+            - 'php artisan migrate --force'
