@@ -10,6 +10,14 @@ class PluginVersion extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'description',
+        'plugin_id',
+        'revoked',
+        'file_path'
+    ];
+
     public function plugin(): BelongsTo
     {
         return $this->belongsTo(Plugin::class);

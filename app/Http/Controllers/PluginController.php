@@ -36,10 +36,17 @@ class PluginController extends Controller
 
     public function new_release (Plugin $plugin, Request $request) {
         if((Auth::id() === $plugin->user->id) || (Auth::user()->staff)) {
+            $request->validate([
+                'name' => 'required|max:255',
+                'file' => 'required|mimes:jar|max:32768'
+            ]);
             $release = new PluginVersion;
             $release->name = $request->name;
             $release->description = $request->description;
             $release->plugin_id = $plugin->id;
+            $file_name = time().'_'.$request->file->getClientOriginalName();
+            $file_path = $request->file('file')->storeAs('uploads', $file_name, 'public');
+            $release->file_path = '/storage/'.$file_path;
             $release->save();
             $plugin->updated_at = Carbon::now();
             $plugin->save();

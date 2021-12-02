@@ -29,15 +29,20 @@
                         <li>{{ __('Compatible with ').$plugin->platform->name.' '.$plugin->platform_versions->pluck('name')->implode(', ') }}</li>
                         <li>{{ __('Updated ').$plugin->latest_version()->updated_at->diffForHumans() }}</li>
                     </ul>
+                    @if($plugin->latest_version())
+                        <a href="{{ url((string) $plugin->latest_version()->file_path) }}" class="btn btn-primary mt-3">&darr; &nbsp; {{ __('Download') }}</a>
+                    @elseif(!$plugin->latest_version())
+                        <p>{{ __('This plugin does not have any available released versions. Hopefully one is coming soon.') }}</p>
+                    @endif
                     @if(\Illuminate\Support\Facades\Auth::check())
+                        <div class="mt-4">
+                            @livewire('favorites-button', ['plugin' => $plugin])
+                        </div>
                         @if((Auth::user()->staff))
                             <div class="mt-4">
                                 @livewire('plugin-reviewed-control-button', ['plugin' => $plugin])
                             </div>
                         @endif
-                        <div class="mt-4">
-                            @livewire('favorites-button', ['plugin' => $plugin])
-                        </div>
                         @if((\Illuminate\Support\Facades\Auth::id() === $plugin->user_id) || (Auth::user()->staff))
                             <div class="mt-4">
                                 @livewire('plugin-public-control-button', ['plugin' => $plugin])
@@ -47,26 +52,6 @@
                         <div class="alert alert-info mt-4 mb-0 pt-2 pb-2">
                             {{ __('Sign in to add this to your favorites.') }}
                         </div>
-                    @endif
-                </div>
-            </div>
-            <div class="card mb-2">
-                <div class="card-header">
-                    {{ __('Install') }}
-                </div>
-                <div class="card-body">
-                    @if($plugin->latest_version())
-                    <!--
-                        <p>On a server running Paper 1.19 or newer, run the following command as OP from the Server Console:</p>
-                        <code>
-                            /airdock install {{ $plugin->slug }}
-                        </code>
-                        <p class="mt-3">The command must be run from the server console, and will not work in-game.</p>
-                    -->
-                        <p>If you are running a compatible server, you can directly download the latest version and add it to your <code>plugins</code> folder:</p>
-                        <button class="btn btn-primary">&darr; &nbsp; {{ __('Download') }}</button>
-                    @elseif(!$plugin->latest_version())
-                        <p>{{ __('This plugin does not have any available released versions. Hopefully one is coming soon.') }}</p>
                     @endif
                 </div>
             </div>
@@ -129,12 +114,20 @@
                             @if((\Illuminate\Support\Facades\Auth::id() === $plugin->user->id) || (Auth::user()->staff))
                                 @if(!$editing_new_release)
                                     <a href="#" class="btn btn-dark mb-3" wire:click="$set('editing_new_release', true)">{{ __('Publish a new release') }}</a>
+                                    @if($errors->any())
+                                        {!! implode('', $errors->all('<div class="alert alert-danger">Error: :message</div>')) !!}
+                                    @endif
                                 @elseif($editing_new_release)
-                                    <form action="/form/new-release/{{ $plugin->id }}" method="POST">
+                                    <form action="/form/new-release/{{ $plugin->id }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         <div class="form-group mb-3">
-                                            <label for="name">Release name</label>
+                                            <label for="name">{{ __('Release name') }}</label>
                                             <input type="text" name="name" required class="form-control bg-white" id="name" placeholder="Name of the release">
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="file">{{ __('Plugin file') }}</label>
+                                            <br/>
+                                            <input type="file" class="form-control" id="file" name="file">
                                         </div>
                                         <x-easy-mde name="description" />
                                         <button type="submit" class="btn btn-primary mb-3">{{ __('Save changes') }}</button>
@@ -153,6 +146,7 @@
                                     <div id="collapse-{{ $key }}" class="accordion-collapse collapse @if($loop->first) show @endif" aria-labelledby="accordion-entry-{{ $key }}" data-bs-parent="#versions">
                                         <div class="accordion-body bg-white">
                                             {!! $converter->convertToHtml($version->description) !!}
+                                            <a href="{{ url((string) $version->file_path) }}" class="btn btn-primary">&darr; &nbsp; {{ __('Download') }}</a>
                                         </div>
                                     </div>
                                 </div>
