@@ -30,7 +30,9 @@
                         <li>{{ __('Updated ').$plugin->latest_version()->updated_at->diffForHumans() }}</li>
                     </ul>
                     @if($plugin->latest_version())
-                        <a href="{{ url((string) $plugin->latest_version()->file_path) }}" class="btn btn-primary mt-3">&darr; &nbsp; {{ __('Download') }}</a>
+                        @if((string) $plugin->latest_version()->file_path)
+                            <a href="{{ url((string) $plugin->latest_version()->file_path) }}" class="btn btn-primary mt-3">&darr; &nbsp; {{ __('Download') }}</a>
+                        @endif
                     @elseif(!$plugin->latest_version())
                         <p>{{ __('This plugin does not have any available released versions. Hopefully one is coming soon.') }}</p>
                     @endif
@@ -146,7 +148,9 @@
                                     <div id="collapse-{{ $key }}" class="accordion-collapse collapse @if($loop->first) show @endif" aria-labelledby="accordion-entry-{{ $key }}" data-bs-parent="#versions">
                                         <div class="accordion-body bg-white">
                                             {!! $converter->convertToHtml($version->description) !!}
-                                            <a href="{{ url((string) $version->file_path) }}" class="btn btn-primary">&darr; &nbsp; {{ __('Download') }}</a>
+                                            @if((string) $version->file_path)
+                                                <a href="{{ url((string) $version->file_path) }}" class="btn btn-primary">&darr; &nbsp; {{ __('Download') }}</a>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
