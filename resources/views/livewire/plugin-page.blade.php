@@ -77,7 +77,9 @@
                 </div>
                 <div class="card-body">
                     <?php $ad = \App\Models\Ad::getAd(); ?>
-                    <a href="{{ $ad->url }}"><img class="w-100" style="max-width: 150px;" src="{{ url(\Illuminate\Support\Facades\Storage::url((string) $ad->file_path)) }}" alt="Advertisement" /></a>
+                    @if($ad)
+                        <a href="{{ $ad->url }}"><img class="w-100" style="max-width: 150px;" src="{{ url(\Illuminate\Support\Facades\Storage::url((string) $ad->file_path)) }}" alt="Advertisement" /></a>
+                    @endif
                 </div>
             </div>
         </div>
