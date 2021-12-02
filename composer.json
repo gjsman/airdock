@@ -17,6 +17,7 @@
         "laravel/ui": "^3.4",
         "laravel/vapor-core": "^2.16",
         "league/commonmark": "^2.0",
+        "league/flysystem-aws-s3-v3": "^1.0",
         "livewire/livewire": "^2.8",
         "spiral/roadrunner": "^2.0"
     },

@@ -7,6 +7,7 @@ use App\Models\PluginVersion;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PluginController extends Controller
 {
@@ -46,7 +47,17 @@ class PluginController extends Controller
             $release->plugin_id = $plugin->id;
             $file_name = time().'_'.$request->file->getClientOriginalName();
             $file_path = $request->file('file')->storeAs('uploads', $file_name, 'public');
-            $release->file_path = '/storage/'.$file_path;
+            if(env('FILESYSTEM_DRIVER') === 's3') {
+                // Should work on, well, local setups but it causes weird permission glitches on local disks.
+                // This may be a Storage bug that needs a workaround.
+                Storage::setVisibility($file_path, 'public');
+            }
+            //$release->file_path = '/storage/'.$file_path;
+            // $file_path = $request->file('file')->storeAs('uploads', $file_name, 'public');
+            // $file_path = Storage::put('storage', $request->file('file'), 'public');
+            // $file_path = Storage::putFile('storage', $request->file('file'));
+            // $file_path = Storage::put('uploads'.$file_name, $request->file('file'));
+            $release->file_path = $file_path;
             $release->save();
             $plugin->updated_at = Carbon::now();
             $plugin->save();

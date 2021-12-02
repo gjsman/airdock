@@ -5,6 +5,7 @@ environments:
         memory: 1024
         cli-memory: 512
         runtime: 'php-8.0:al2'
+        storage: test-airdock-storage
         database: airdock
         queues: false
         mail: false
@@ -24,6 +25,7 @@ environments:
         cli-memory: 512
         runtime: 'php-8.0:al2'
         database: airdock
+        storage: test-airdock-storage
         queues: false
         mail: false
         scheduler: false

@@ -31,7 +31,7 @@
                     </ul>
                     @if($plugin->latest_version())
                         @if((string) $plugin->latest_version()->file_path)
-                            <a href="{{ url((string) $plugin->latest_version()->file_path) }}" class="btn btn-primary mt-3">&darr; &nbsp; {{ __('Download') }}</a>
+                            <a href="{{ url(\Illuminate\Support\Facades\Storage::url((string) $plugin->latest_version()->file_path)) }}" class="btn btn-primary mt-3">&darr; &nbsp; {{ __('Download') }}</a>
                         @endif
                     @elseif(!$plugin->latest_version())
                         <p>{{ __('This plugin does not have any available released versions. Hopefully one is coming soon.') }}</p>
@@ -149,7 +149,7 @@
                                         <div class="accordion-body bg-white">
                                             {!! $converter->convertToHtml($version->description) !!}
                                             @if((string) $version->file_path)
-                                                <a href="{{ url((string) $version->file_path) }}" class="btn btn-primary">&darr; &nbsp; {{ __('Download') }}</a>
+                                                <a href="{{ url(\Illuminate\Support\Facades\Storage::url((string) $version->file_path)) }}" class="btn btn-primary">&darr; &nbsp; {{ __('Download') }}</a>
                                             @endif
                                         </div>
                                     </div>
