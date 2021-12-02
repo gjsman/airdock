@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdController;
 use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\StaffController;
@@ -21,4 +22,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/favorites', [FavoriteController::class, 'show'])->name('favorites');
     Route::post('/form/update-overview/{plugin}', [PluginController::class, 'update_overview']);
     Route::post('/form/new-release/{plugin}', [PluginController::class, 'new_release']);
+    Route::get('/ads', [AdController::class, 'index'])->name('ads');
+    Route::post('/ads', [AdController::class, 'submit'])->name('ads.submit');
 });

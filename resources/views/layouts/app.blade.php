@@ -48,6 +48,13 @@
                         <li class="nav-item">
                             <a class="nav-link @if(\Illuminate\Support\Facades\Route::is('developers')) active @endif" href="{{ route('developers') }}">{{ __('Developers') }}</a>
                         </li>
+                        @if(Auth::check())
+                            @if(Auth::user()->staff)
+                                <li class="nav-item">
+                                    <a class="nav-link @if(\Illuminate\Support\Facades\Route::is('ads')) active @endif" href="{{ route('ads') }}">{{ __('Ads') }}</a>
+                                </li>
+                            @endif
+                        @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->
