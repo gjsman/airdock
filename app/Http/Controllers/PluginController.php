@@ -45,7 +45,7 @@ class PluginController extends Controller
             $release->name = $request->name;
             $release->description = $request->description;
             $release->plugin_id = $plugin->id;
-            $file_name = time().'_'.$request->file->getClientOriginalName();
+            $file_name = $request->file->getClientOriginalName().'_'.$plugin->id.'_'.time();
             if (env('FILESYSTEM_DRIVER') === 's3') {
                 $file_path = $request->file('file')->storePubliclyAs('uploads', $file_name);
             } else {
