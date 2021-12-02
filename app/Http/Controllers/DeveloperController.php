@@ -27,6 +27,11 @@ class DeveloperController extends Controller
         if(Auth::check()) {
             // TODO: Validation!
 
+            $request->validate([
+                'name' => 'required|max:255',
+                'file' => 'required|mimes:jar|max:32768'
+            ]);
+
             $plugin = new Plugin();
             $plugin->name = $request->name;
             $plugin->summary = $request->summary;
@@ -56,6 +61,15 @@ class DeveloperController extends Controller
             $version->name = $request->version;
             $version->description = "Initial version on Airdock.";
             $version->plugin_id = $plugin->id;
+
+            $file_name = time().'_'.$request->file->getClientOriginalName();
+            if (env('FILESYSTEM_DRIVER') === 's3') {
+                $file_path = $request->file('file')->storePubliclyAs('uploads', $file_name);
+            } else {
+                $file_path = $request->file('file')->storeAs('uploads', $file_name, 'public');
+            }
+
+            $version->file_path = $file_path;
             $version->save();
 
             return redirect()->route('developers');

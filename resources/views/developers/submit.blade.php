@@ -32,8 +32,11 @@
                         {{ __('Form') }}
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="/developer/submit">
+                        <form method="POST" action="/developer/submit" enctype="multipart/form-data">
                             @csrf
+                            @if($errors->any())
+                                {!! implode('', $errors->all('<div class="form-group mb-3"><div class="alert alert-danger">Error: :message</div></div>')) !!}
+                            @endif
                             <div class="form-group mb-3">
                                 <label for="name">{{ __('Name') }}</label>
                                 <input type="text" required name="name" class="form-control" id="name" placeholder="{{ __('SuperMobSmasher') }}">
@@ -64,6 +67,11 @@
                             </div>
                             <div class="alert alert-danger mb-3">
                                 {{ __('We only accept submissions that run on the latest-supported platform versions - though you can add support for older versions later by changing your plugin settings.') }}
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="file">{{ __('Plugin file') }}</label>
+                                <br/>
+                                <input type="file" class="form-control" id="file" name="file">
                             </div>
                             <div class="form-group mb-3">
                                 <label for="description">{{ __('Description (please be detailed)') }}</label>

@@ -46,12 +46,12 @@ class PluginController extends Controller
             $release->description = $request->description;
             $release->plugin_id = $plugin->id;
             $file_name = time().'_'.$request->file->getClientOriginalName();
-            // $file_path = $request->file('file')->storeAs('uploads', $file_name);
             if (env('FILESYSTEM_DRIVER') === 's3') {
                 $file_path = $request->file('file')->storePubliclyAs('uploads', $file_name);
             } else {
                 $file_path = $request->file('file')->storeAs('uploads', $file_name, 'public');
             }
+            // $file_path = $request->file('file')->storeAs('uploads', $file_name);
             // if(env('FILESYSTEM_DRIVER') === 's3') {
                 // Should work on, well, local setups but it causes weird permission glitches on local disks.
                 // This may be a Storage bug that needs a workaround.
